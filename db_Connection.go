@@ -33,6 +33,6 @@ func DataMigration() {
 
 	// defer DataBase.Close()
 
-	DataBase.AutoMigrate(&Employee{})
+	DataBase.AutoMigrate(&Employee{}) // Creates table
 	fmt.Println("Connect!")
 }

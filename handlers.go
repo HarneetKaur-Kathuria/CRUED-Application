@@ -106,7 +106,6 @@ func DeleteEmployeeByID(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			if emp.EmpId == e_id {
 				DataBase.Delete(&emp)
-				DataBase.Save(&employees)
 				json.NewEncoder(w).Encode("Employee Deleted !")
 				return
 			}
@@ -121,62 +120,11 @@ func UpdateById(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	var updatedEmp Employee
-	// DataBase.First(&updatedEmp, params["id"])
-	// if employee.IsEmpty() {
-	// 	json.NewEncoder(w).Encode("Employee Id Not Found")
-	// 	return
-	// }
+	var emp Employee
+	DataBase.First(&emp, params["id"]).Delete(&emp)
+	json.NewDecoder(r.Body).Decode(&emp)
+	DataBase.Save(&emp)
+	json.NewEncoder(w).Encode(&emp)
 
-	// var oldemp Employee
-	var employees []Employee
-	// var oldemp Employee
-	DataBase.Find(&employees)
-	_ = json.NewDecoder(r.Body).Decode(&updatedEmp)
-	// DataBase.Where("id=?", params["id"]).Delete(&employees)
-
-	// DataBase.First(&oldemp, params["id"])
-	// oldemp.Email = updatedEmp.Email
-	// oldemp.EmpId = updatedEmp.EmpId
-	// oldemp.Gender = updatedEmp.Gender
-	// oldemp.EmpName = updatedEmp.EmpName
-	// oldemp.EmpSalary = updatedEmp.EmpSalary
-	// DataBase.Save(&updatedEmp)
-	// DataBase.Create(&employee)
-	// json.NewEncoder(w).Encode("Employee Updated !")
-	// json.NewEncoder(w).Encode(&employee)
-
-	// var employees []Employee\
-	// var oldemp Employee
-	// DataBase.Find(&employees)
-	// DataBase.Where("emp_id =?", params["id"])
-	// fmt.Println(oldemp)
-	// json.NewDecoder(r.Body).Decode(&oldemp)
-	// DataBase.InstantSet("empid", )
-	// fmt.Println(oldemp)
-
-	for _, emp := range employees {
-		// string to int
-		e_id, err := strconv.Atoi(params["id"])
-		if err == nil {
-			if emp.EmpId == e_id {
-				DataBase.Delete(&emp)
-	// oldemp.Email = updatedEmp.Email
-	// oldemp.EmpId = updatedEmp.EmpId
-	// oldemp.Gender = updatedEmp.Gender
-	// oldemp.EmpName = updatedEmp.EmpName
-	// oldemp.EmpSalary = updatedEmp.EmpSalary
-
-	// DataBase.Update()
-	// DataBase.Delete(&oldemp)
-				DataBase.Create(&updatedEmp)
-				json.NewEncoder(w).Encode("Employee Updated !")
-
-			}
-			// DataBase.Save(&employees)
-		}
-
-	}
-	// json.NewEncoder(w).Encode("Employee Id Not Found")
 	defer r.Body.Close()
 }
