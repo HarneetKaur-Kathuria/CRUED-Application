@@ -18,8 +18,7 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content - Type", "application/json")
 
 	/*
-
-		--- could be double Using Unmarshal
+		--- could be done Using Unmarshal
 
 		reqBody, _ := ioutil.ReadAll(r.Body)
 		_= json.Unmarshal(reqBody, &newEmp)
@@ -33,10 +32,10 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// checking if the Emp Id Already Exits, If yes the sends the msg
 	var employees []Employee
 	DataBase.Find(&employees)
 
-	// checking if the Emp Id Already Exits, If yes the sends the msg
 	for _, emp := range employees {
 		if emp.EmpId == newEmp.EmpId {
 			json.NewEncoder(w).Encode("Employee Id Already Exits")
@@ -44,7 +43,7 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// if No then creates the new Enployee
+	// if No then creates the new Employee
 	DataBase.Create(&newEmp)
 	json.NewEncoder(w).Encode("Employee Created !")
 	json.NewEncoder(w).Encode(newEmp)
@@ -55,7 +54,7 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content - Type", "application/json")
 	var employees []Employee
-	DataBase.Find(&employees)
+	DataBase.Find(&employees) // fetching all the rows/employees
 	json.NewEncoder(w).Encode(employees)
 
 }
@@ -81,6 +80,7 @@ func GetEmployeeById(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+	// if ID Not found
 	json.NewEncoder(w).Encode("Employee Id Not Found")
 
 }
@@ -88,7 +88,7 @@ func GetEmployeeById(w http.ResponseWriter, r *http.Request) {
 func DeleteAllEmployees(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content - Type", "application/json")
 	var employees []Employee
-	DataBase.Delete(&employees)
+	DataBase.Delete(&employees) // deleting all the rows/employees
 	json.NewEncoder(w).Encode("Employees Deleted !")
 
 }
@@ -98,19 +98,21 @@ func DeleteEmployeeByID(w http.ResponseWriter, r *http.Request) {
 
 	employees := []Employee{}
 	params := mux.Vars(r)
-	DataBase.Find(&employees) // transfering data from table to employees var
+	DataBase.Find(&employees) // fetching data from table to employees var
 
 	for _, emp := range employees {
 		// string to int
 		e_id, err := strconv.Atoi(params["id"])
 		if err == nil {
 			if emp.EmpId == e_id {
-				DataBase.Delete(&emp)
+				DataBase.Delete(&emp) // deleting the row of passed ID
 				json.NewEncoder(w).Encode("Employee Deleted !")
 				return
 			}
 		}
 	}
+
+	// IF ID not Found
 	json.NewEncoder(w).Encode("Employee Id Not Found")
 
 }
@@ -126,5 +128,5 @@ func UpdateById(w http.ResponseWriter, r *http.Request) {
 	DataBase.Save(&emp)
 	json.NewEncoder(w).Encode(&emp)
 
-	defer r.Body.Close()
+	// defer r.Body.Close()
 }

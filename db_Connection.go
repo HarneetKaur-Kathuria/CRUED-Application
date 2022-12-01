@@ -13,15 +13,11 @@ import (
 // global var so that we use same var in Handlers also
 var DataBase *gorm.DB
 
-// var DataBase *sql.DB
-
-// url from where the connection has to be established "DRIVER"
-
 // var urlDSN = "root:Test@123@tcp(localhost:3306)/db_cognologix"
 
 var urlDSN = "root:Test@123@tcp(localhost:3306)/db_cognologix?charset=utf8&parseTime=True"
 
-var err error // for error
+var err error // for Error
 
 func DataMigration() {
 
@@ -31,8 +27,7 @@ func DataMigration() {
 		panic("connection failed")
 	}
 
-	// defer DataBase.Close()
-
 	DataBase.AutoMigrate(&Employee{}) // Creates table
 	fmt.Println("Connect!")
 }
+

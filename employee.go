@@ -4,7 +4,7 @@ package main
 
 type Employee struct {
 	EmpId     int     `json:"empid" gorm:"primary_key"`
-	// gorm.Model
+	// gorm.Model // struct with ID as primary Key
 	EmpName   string  `json:"empname"`
 	EmpSalary float64 `json:"salary"`
 	Email     string  `json:"email"`
